@@ -1,9 +1,43 @@
-import Image from "next/image";
+import Marquee from "@/components/Marquee";
+import MainNews from "@/components/mainNews";
+import NewsCard from "@/components/newsCard";
 
-export default function Home() {
+interface IotherSections {
+  curationId: string,
+  title: string,
+  articles: {
+    id: string,
+    title: string,
+    description: string,
+    category: string,
+    ImageUrl: string,
+    ImageAlt: string
+  }[];
+}
+
+export default async function Home() {
+  const res = await fetch('https://news-api-v2.vercel.app/api/news/sections')
+  const data = await res.json()
+  const sections = data.data
+  const mainNews = sections[0].articles
+  const otherSections: IotherSections[] = sections.slice(1)
   return (
     <div>
-      কর্মীদের অপরাধ নিয়ন্ত্রণ কি বিএনপির জন্য কঠিন হয়ে উঠছে?
+      <Marquee/>
+      <div className="grid grid-cols-3 max-w-7xl mx-auto">
+        <div className="col-span-2">
+          <MainNews news={mainNews}/>
+          <div className="grid gap-5 mt-5">
+            {otherSections.map(os => <div key={os.curationId}>
+            <h1 className="font-bold border-b-2 pb-1 border-red-700">{os.title}</h1>
+            <div className="grid mt-3 grid-cols-3 gap-2">
+              {os.articles.map(news => <NewsCard key={news.id} news={news}/>)}
+            </div>
+            </div>)}
+          </div>
+        </div>
+        <div className="col-span-1"></div>
+      </div>
     </div>
   );
 }
