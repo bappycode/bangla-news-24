@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface News {
     id: number;
@@ -15,6 +16,7 @@ const MainNews = ({news}: {news: News[]}) => {
 // const otherNews = news.slice(1);
     return (
         <div className="flex gap-2">
+                  <Link href={`/news/${firstNews.id}`}>
            <div className="card bg-base-100 w-96 shadow-sm">
   <figure>
     <Image
@@ -30,12 +32,15 @@ const MainNews = ({news}: {news: News[]}) => {
     <p>{firstNews.description}</p>
     </div>
   </div>
+  </Link>
 <div className="grid gap-2">
     {otherNews.slice(0, 4).map((n) => (
-      <div className="card bg-base-100 border border-gray-300 py-5" key={n.id} >
-        <p className="text-red-500 semi-bold">{firstNews.category}</p>
-        <div>{n.title}</div>
-      </div>
+      <Link key={n.id} href={`/news/${n.id}`}>
+        <div className="card bg-base-100 border border-gray-300 py-5">
+          <p className="text-red-500 semi-bold">{n.category}</p>
+          <div>{n.title}</div>
+        </div>
+      </Link>
     ))}
 </div>
 </div>
